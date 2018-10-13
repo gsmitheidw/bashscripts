@@ -1,0 +1,36 @@
+#!/usr/bin/expect 
+#
+# Expect Script to login to a Huawei HG538C  
+# - Requres telnet enabled, see https://hg658c.wordpress.com/
+#
+###################################################################
+#
+# Set router ip address:
+set ip "10.1.1.1"
+# set output [open "router.log" "a+"]
+spawn telnet $ip
+expect "Login: "
+# default factory user (Admin):
+send "!!Huawei\r"
+expect "Password: "
+# default factory password:
+send "@HuaweiHgw\r"
+sleep 1
+expect "ATP>"
+send "sh\r"
+expect "# "
+# Some example commands next few lines, amend as required:
+send "cat /proc/net/ip_conntrack | grep tcp | grep $ip\r"
+expect "# "
+send "netstat -a | grep -i established\r"
+expect "# "
+send "netstat -a | grep LISTEN\r"
+expect "# "
+# set result $expect_out(buffer)
+# puts $result $output
+# close $output
+
+interact
+# Log out of device after use:
+send "exit\r"
+send "exit\r"
